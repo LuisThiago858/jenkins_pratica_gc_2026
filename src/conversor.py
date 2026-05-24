@@ -3,4 +3,4 @@ def fahrenheit_para_celsius(fahrenheit):
 
 
 def celsius_para_fahrenheit(celsius):
-    return (celsius * 9 / 5) + 30
+    return (celsius * 9 / 5) + 32
