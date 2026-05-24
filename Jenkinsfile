@@ -1,9 +1,9 @@
 pipeline {
     agent any
-    triggers {
+    // triggers {
+    //     cron('H/2 * * * *')
+    // }
 
-        cron('H/2 * * * *')
-    }
     stages {
         stage('Checkout') {
             steps {
@@ -14,10 +14,10 @@ pipeline {
         stage('Setup') {
             steps {
                 echo 'Preparando ambiente Python...'
-                sh '''
-                    python3 -m venv venv
-                    . venv/bin/activate
-                    pip install --upgrade pip
+                bat '''
+                    py -m venv venv
+                    call venv\\Scripts\\activate.bat
+                    python -m pip install --upgrade pip
                     pip install -r requirements.txt
                 '''
             }
@@ -25,17 +25,17 @@ pipeline {
         stage('Build') {
             steps {
                 echo 'Verificando compilação/sintaxe...'
-                sh '''
-                    . venv/bin/activate
-                    python3 -m py_compile src/conversor.py
+                bat '''
+                    call venv\\Scripts\\activate.bat
+                    python -m py_compile src\\conversor.py
                 '''
             }
         }
         stage('Test') {
             steps {
                 echo 'Executando testes...'
-                sh '''
-                    . venv/bin/activate
+                bat '''
+                    call venv\\Scripts\\activate.bat
                     pytest -v --junitxml=test-results.xml
                 '''
             }
@@ -43,8 +43,8 @@ pipeline {
         stage('Coverage') {
             steps {
                 echo 'Executando cobertura de código...'
-                sh '''
-                    . venv/bin/activate
+                bat '''
+                    call venv\\Scripts\\activate.bat
                     pytest --cov=src --cov-report=xml --cov-report=html
                 '''
             }
