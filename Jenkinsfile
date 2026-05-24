@@ -18,7 +18,7 @@ pipeline {
                     python -m venv venv
                     call venv\\Scripts\\activate.bat
                     python -m pip install --upgrade pip
-                    pip install -r requirements.txt
+                    python -m pip install -r requirements.txt
                 '''
             }
         }
@@ -27,6 +27,7 @@ pipeline {
                 echo 'Verificando compilação/sintaxe...'
                 bat '''
                     call venv\\Scripts\\activate.bat
+                    set PYTHONPATH=%CD%
                     python -m py_compile src\\conversor.py
                 '''
             }
@@ -36,7 +37,8 @@ pipeline {
                 echo 'Executando testes...'
                 bat '''
                     call venv\\Scripts\\activate.bat
-                    pytest -v --junitxml=test-results.xml
+                    set PYTHONPATH=%CD%
+                    python -m pytest -v --junitxml=test-results.xml
                 '''
             }
         }
@@ -45,7 +47,8 @@ pipeline {
                 echo 'Executando cobertura de código...'
                 bat '''
                     call venv\\Scripts\\activate.bat
-                    pytest --cov=src --cov-report=xml --cov-report=html
+                    set PYTHONPATH=%CD%
+                    python -m pytest --cov=src --cov-report=xml --cov-report=html
                 '''
             }
         }
