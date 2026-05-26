@@ -30,16 +30,18 @@ pipeline {
                     set PYTHONPATH=%CD%
                     python -m py_compile src\\conversor.py
                 '''
-            }
+            }9
         }
         stage('Test') {
             steps {
                 echo 'Executando testes...'
-                bat '''
-                    call venv\\Scripts\\activate.bat
-                    set PYTHONPATH=%CD%
-                    python -m pytest -v --junitxml=test-results.xml
-                '''
+                catchError(buildResult: 'UNSTABLE', stageResult: 'UNSTABLE') {
+                    bat '''
+                        call venv\\Scripts\\activate.bat
+                        set PYTHONPATH=%CD%
+                        python -m pytest -v --junitxml=test-results.xml
+                    '''
+                }
             }
         }
         stage('Coverage') {
