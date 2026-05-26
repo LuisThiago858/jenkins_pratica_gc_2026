@@ -30,7 +30,7 @@ pipeline {
                     set PYTHONPATH=%CD%
                     python -m py_compile src\\conversor.py
                 '''
-            }9
+            }
         }
         stage('Test') {
             steps {
